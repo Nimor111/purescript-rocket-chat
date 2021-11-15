@@ -19,5 +19,6 @@ stdenv.mkDerivation {
     nodejs-14_x
     easy-ps.purs
     easy-ps.spago
+    easy-ps.purs-tidy
   ];
 }
