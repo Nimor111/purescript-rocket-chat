@@ -1,0 +1,6 @@
+{
+    "name": "purescript-rocket-api",
+    "dependencies": {
+        "xhr2": "^0.2.1"
+    }
+}
