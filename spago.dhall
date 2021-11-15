@@ -1,4 +1,4 @@
-{ name = "purescript-rocket-chat"
+{ name = "rocket-chat"
 , dependencies =
   [ "aff"
   , "affjax"
