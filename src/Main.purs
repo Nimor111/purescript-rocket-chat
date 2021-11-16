@@ -10,17 +10,21 @@ import Data.Argonaut (decodeJson, encodeJson)
 import Data.Either (Either(..))
 import Data.HTTP.Method (Method(..))
 import Data.Maybe (Maybe(..))
-import Dotenv (loadFile) as Dotenv
+import Dotenv as Dotenv
 import Effect (Effect)
 import Effect.Aff (launchAff_)
 import Effect.Class (liftEffect)
 import Effect.Class.Console (log)
-import Node.Process (lookupEnv)
+import Node.Process (getEnv)
+import Type.Proxy (Proxy(..))
+import TypedEnv (type (<:), envErrorMessage, fromEnv)
 
-type AuthRequest =
-  { username :: String
-  , password :: String
-  }
+
+type Environment =
+  ( username :: String <: "ROCKET_USERNAME"
+  , password :: String <: "ROCKET_PASSWORD"
+  , apiUrl   :: String <: "ROCKET_API_URL"
+  )
 
 type ApiCredentials =
   { data ::
@@ -48,18 +52,17 @@ main = do
   launchAff_
     $ do
         _ <- Dotenv.loadFile
-        username <- liftEffect $ lookupEnv "ROCKET_USERNAME"
-        password <- liftEffect $ lookupEnv "ROCKET_PASSWORD"
-        maybeApiUrl <- liftEffect $ lookupEnv "ROCKET_API_URL"
-        case maybeApiUrl of
-          Nothing -> log "No API Url provided"
-          Just apiUrl -> do
-            res <- post RF.json (apiUrl <> "/login") (Just (RB.json (encodeJson $ { username, password })))
+        eitherConfig <- liftEffect $ fromEnv (Proxy :: Proxy Environment) <$> getEnv
+        case eitherConfig of
+          Left err -> do
+            log $ "Typedenv environment error: " <> envErrorMessage err
+          Right { username, password, apiUrl } -> do
+            res <- post RF.json (apiUrl <> "/login") (Just (RB.json (encodeJson $ { username , password })))
             case res of
               Left err -> do
                 log $ "GET /api response failed to decode: " <> printError err
-              Right response -> do
-                case (decodeJson response.body) of
+              Right apiCredentialsResponse -> do
+                case (decodeJson apiCredentialsResponse.body) of
                   Right (apiCreds :: ApiCredentials) -> do
                     let token = apiCreds.data.authToken
                     let userId = apiCreds.data.userId
@@ -79,16 +82,16 @@ main = do
                             ]
                         }
 
-                    resp <- request req
+                    groupsResp <- request req
 
-                    case resp of
+                    case groupsResp of
                       Left e -> do
                         log $ "Can't parse JSON for group req. " <> printError e
-                      Right response -> do
-                        case (decodeJson response.body) of
+                      Right r -> do
+                        case (decodeJson r.body) of
                           Left e ->
                             log $ "Can't decode JSON" <> show e
-                          Right (r :: PrivateGroupsResponse) -> do
-                            log $ show r
+                          Right (groups :: PrivateGroupsResponse) -> do
+                            log $ show groups
                   Left e -> do
                     log $ "Can't parse JSON for auth req. " <> show e

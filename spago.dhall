@@ -9,9 +9,10 @@
   , "either"
   , "http-methods"
   , "maybe"
+  , "node-process"
   , "prelude"
   , "psci-support"
-  , "node-process"
+  , "typedenv"
   ]
 , packages = ./packages.dhall
 , sources = [ "src/**/*.purs", "test/**/*.purs" ]
