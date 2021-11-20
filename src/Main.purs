@@ -11,8 +11,7 @@ import Effect.Class.Console (log)
 import Node.Process (getEnv)
 import Type.Proxy (Proxy(..))
 import TypedEnv (envErrorMessage, fromEnv)
-import Web.RocketChat (fetchCredentials, fetchUserJoinedPublicChannels)
-import Web.RocketChat.Types (Config)
+import Web.RocketChat (Config, fetchCredentials, fetchUserPrivateGroups)
 
 
 main :: Effect Unit
@@ -29,7 +28,7 @@ main = do
             case creds of
               Left e -> pure e
               Right apiCreds -> do
-                -- groups <- fetchUserPrivateGroups env apiCreds
-                -- log $ show groups
-                channels <- fetchUserJoinedPublicChannels env apiCreds
-                log $ show channels
+                groups <- fetchUserPrivateGroups env apiCreds
+                log $ show groups
+                -- channels <- fetchUserJoinedPublicChannels env apiCreds
+                -- log $ show channels
