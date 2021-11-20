@@ -12,14 +12,12 @@ import Effect.Aff (Aff)
 import Effect.Class.Console (log)
 import Web.RocketChat.Types (ApiCredentials, ChannelsResponse, Env)
 
-
 -- TODO Sensible errors
 fetchUserJoinedPublicChannels :: Env -> ApiCredentials -> Aff (Either Unit ChannelsResponse)
 fetchUserJoinedPublicChannels { apiUrl } apiCreds = do
   let
     req = defaultRequest
-      {
-        url = apiUrl <> "/channels.list.joined"
+      { url = apiUrl <> "/channels.list.joined"
       , method = Left GET
       , responseFormat = RF.json
       , headers =

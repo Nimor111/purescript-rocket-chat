@@ -13,6 +13,7 @@
   , "prelude"
   , "psci-support"
   , "typedenv"
+  , "exceptions"
   ]
 , packages = ./packages.dhall
 , sources = [ "src/**/*.purs", "test/**/*.purs" ]

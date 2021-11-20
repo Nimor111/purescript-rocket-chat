@@ -2,12 +2,11 @@ module Web.RocketChat.Types where
 
 import TypedEnv (type (<:))
 
-
 -- | The `Config` type is used to represent the configuration to be read with `purescript-typedenv`
 type Config =
   ( username :: String <: "ROCKET_USERNAME"
   , password :: String <: "ROCKET_PASSWORD"
-  , apiUrl   :: String <: "ROCKET_API_URL"
+  , apiUrl :: String <: "ROCKET_API_URL"
   )
 
 -- | The `Env` type is used to represent configuration needed to interact with the rocket chat API

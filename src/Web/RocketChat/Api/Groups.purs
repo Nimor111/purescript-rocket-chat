@@ -12,7 +12,6 @@ import Effect.Aff (Aff)
 import Effect.Class.Console (log)
 import Web.RocketChat.Types (ApiCredentials, Env, PrivateGroupsResponse)
 
-
 -- TODO Sensible errors
 fetchUserPrivateGroups :: Env -> ApiCredentials -> Aff (Either Unit PrivateGroupsResponse)
 fetchUserPrivateGroups { apiUrl } apiCreds = do
