@@ -3,15 +3,10 @@ module Main where
 import Prelude
 
 import Data.Either (Either(..))
-import Dotenv as Dotenv
 import Effect (Effect)
 import Effect.Aff (launchAff_)
-import Effect.Class (liftEffect)
 import Effect.Class.Console (log)
-import Node.Process (getEnv)
-import Type.Proxy (Proxy(..))
-import TypedEnv (envErrorMessage, fromEnv)
-import Web.RocketChat (Config, fetchCredentials, fetchUserJoinedPublicChannels, fetchUserPrivateGroups, fetchConfig)
+import Web.RocketChat (fetchConfig, fetchCredentials, fetchUserJoinedPublicChannels, fetchUserPrivateGroups)
 
 main :: Effect Unit
 main = do
